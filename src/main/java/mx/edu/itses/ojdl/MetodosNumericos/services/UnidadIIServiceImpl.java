@@ -3,6 +3,7 @@ package mx.edu.itses.ojdl.MetodosNumericos.services;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.Biseccion;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.PuntoFijo;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.ReglaFalsa;
 import org.springframework.stereotype.Service;
 
@@ -66,17 +67,17 @@ public class UnidadIIServiceImpl implements UnidadIIService {
         ArrayList<ReglaFalsa> respuesta = new ArrayList<>();
         double XL, XU, XRa, XRn, FXL, FXU, FXR, Ea;
 
-          XL = regulafalsi.getXL();
+        XL = regulafalsi.getXL();
         XU = regulafalsi.getXU();
         XRa = 0;
         Ea = 100;
-          FXL = Funciones.Ecuacion(regulafalsi.getFX(), XL);
+        FXL = Funciones.Ecuacion(regulafalsi.getFX(), XL);
         FXU = Funciones.Ecuacion(regulafalsi.getFX(), XU);
-       if (FXL * FXU < 0) {
+        if (FXL * FXU < 0) {
             for (int i = 1; i <= regulafalsi.getIteracionesMaximas(); i++) {
                 FXL = Funciones.Ecuacion(regulafalsi.getFX(), XL);
                 FXU = Funciones.Ecuacion(regulafalsi.getFX(), XU);
-                XRn = XU - ((FXU*(XL-XU))/(FXL-FXU)) ;
+                XRn = XU - ((FXU * (XL - XU)) / (FXL - FXU));
                 FXR = Funciones.Ecuacion(regulafalsi.getFX(), XRn);
                 if (i != 1) {
                     Ea = Funciones.ErrorRelativo(XRn, XRa);
@@ -88,8 +89,7 @@ public class UnidadIIServiceImpl implements UnidadIIService {
                 renglon.setFXL(FXL);
                 renglon.setFXU(FXU);
                 renglon.setFXR(FXR);
-              
-          
+
                 renglon.setEa(Ea);
                 if (FXL * FXR < 0) {
                     XU = XRn;
@@ -110,8 +110,33 @@ public class UnidadIIServiceImpl implements UnidadIIService {
             //renglon.setIntervaloInvalido(true);
             respuesta.add(regulafalsi);
         }
-       
-       return respuesta;
+
+        return respuesta;
+    }
+
+    @Override
+    public ArrayList<PuntoFijo> AlgoritmoPuntoFijo(PuntoFijo fixedpoint) {
+        ArrayList<PuntoFijo> respuesta = new ArrayList<>();
+        double XI, GXI, Ea;
+        XI = fixedpoint.getXI();
+        GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
+        Ea = 100;
+        for (int i = 1; i < fixedpoint.getIteracionesMaximas(); i++) {
+            GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
+            if (i != 1) {
+                Ea = Funciones.ErrorRelativo(GXI, XI);
+            }
+            PuntoFijo renglon = new PuntoFijo();
+            renglon.setXI(XI);
+            renglon.setGXI(GXI);
+            renglon.setEa(Ea);
+            XI = GXI;
+            respuesta.add(renglon);
+            if (Ea <= fixedpoint.getEa()) {
+                break;
+            }
+        }
+        return respuesta;
     }
 
 }

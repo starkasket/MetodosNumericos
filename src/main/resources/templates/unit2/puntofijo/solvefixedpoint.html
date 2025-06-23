@@ -29,31 +29,27 @@
                 </a>
 
             </div>
+        </nav>
+        <div class="container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">XI</th>
+                        <th scope="col">GXI</th>
+                        <th scope="col">Error Aprox.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="solve,iter:${solveFixedPoint}">
+                        <td th:text="${iter.index}"># de Iteración</td>
+                        <td th:text="${solve.XI}">Valor XI</td>
+                        <td th:text="${solve.GXI}">Valor XI+1</td>
+                        <td th:text="${solve.Ea}">Error estimado - aproximación actual</td>
+                    </tr>
 
-    </nav>
-    <div class="container">
-        <div class="row">
-            <img class="img-fluid w-100" th:src="@{/images/metodosnumericos.png}"/>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div class="container">
-        <h1 class="text">Solución de Ecuacciones Algebráicas</h1>
-        <h3 class="text">Métodos Numéricos</h3>
-
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="/unit2/formbisection">Bisección</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/unit2/formregulafalsi">Regla Falsa</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/unit2/formfixedpoint">Punto Fijo</a>
-            </li>
-           
-        </ul>
-    </div>
-
-
-</body>
+    </body>
 </html>
