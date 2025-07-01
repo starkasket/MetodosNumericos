@@ -14,10 +14,19 @@ public class Funciones {
 
         return f;
     }
-    
+
+    public static double Derivada(String fl, double x) {
+        double f;
+        Function funcion = new Function(fl);
+       Argument dx = new Argument("x = " +x);
+      Expression derivada = new Expression("der(f(x), x)", funcion, dx);
+        f = derivada.calculate();
+        
+        return f;
+    }
+
     public static double ErrorRelativo(double ValorNuevo, double ValorAnterior) {
         return abs((ValorNuevo - ValorAnterior) / ValorNuevo * 100);
     }
-
 
 }

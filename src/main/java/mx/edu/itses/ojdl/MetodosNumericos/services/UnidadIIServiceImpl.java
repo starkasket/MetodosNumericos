@@ -3,6 +3,7 @@ package mx.edu.itses.ojdl.MetodosNumericos.services;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.Biseccion;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.NewtonRaphson;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.PuntoFijo;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.ReglaFalsa;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,8 @@ public class UnidadIIServiceImpl implements UnidadIIService {
         Ea = 100;
         FXL = Funciones.Ecuacion(regulafalsi.getFX(), XL);
         FXU = Funciones.Ecuacion(regulafalsi.getFX(), XU);
+        System.out.println(Funciones.Derivada(regulafalsi.getFX(), 2));
+
         if (FXL * FXU < 0) {
             for (int i = 1; i <= regulafalsi.getIteracionesMaximas(); i++) {
                 FXL = Funciones.Ecuacion(regulafalsi.getFX(), XL);
@@ -119,7 +122,7 @@ public class UnidadIIServiceImpl implements UnidadIIService {
         ArrayList<PuntoFijo> respuesta = new ArrayList<>();
         double XI, GXI, Ea;
         XI = fixedpoint.getXI();
-        GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
+   //     GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
         Ea = 100;
         for (int i = 1; i < fixedpoint.getIteracionesMaximas(); i++) {
             GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
@@ -137,6 +140,42 @@ public class UnidadIIServiceImpl implements UnidadIIService {
             }
         }
         return respuesta;
+    }
+
+    @Override
+    public ArrayList<NewtonRaphson> AlgoritmoNewtonRaphon(NewtonRaphson newtonraphson) {
+        ArrayList<NewtonRaphson> respuesta = new ArrayList<>();
+        double XI, FXI, FDXI, XII, Ea;
+
+        XI = newtonraphson.getXI();
+        FXI = Funciones.Ecuacion(newtonraphson.getFX(), XI);
+                    FDXI = Funciones.Derivada(newtonraphson.getFX(), XI);
+
+     
+        Ea = 100;
+        for (int i = 1; i < newtonraphson.getIteracionesMaximas(); i++) {
+            FXI = Funciones.Ecuacion(newtonraphson.getFX(), XI);
+             FDXI = Funciones.Derivada(newtonraphson.getFX(), XI);
+                XII = XI - (FXI/FDXI);
+            if (i != 1) {
+                Ea = Funciones.ErrorRelativo(XII, XI);
+            }
+            NewtonRaphson renglon = new NewtonRaphson();
+            renglon.setXI(XI);
+            renglon.setFXI(FXI);
+            renglon.setFDXI(FDXI);
+            renglon.setXII(XII);
+            renglon.setEa(Ea);
+            XI = XII;
+            
+            respuesta.add(renglon);
+            if(Ea <= newtonraphson.getEa()){
+                break;
+            }
+            
+        }
+        return respuesta;
+
     }
 
 }
