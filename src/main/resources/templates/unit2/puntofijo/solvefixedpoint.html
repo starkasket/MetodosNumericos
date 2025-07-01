@@ -35,7 +35,7 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">XI</th>
+                        <th scope="col">Xi</th>
                         <th scope="col">GXI</th>
                         <th scope="col">Error Aprox.</th>
                     </tr>
@@ -43,8 +43,8 @@
                 <tbody>
                     <tr th:each="solve,iter:${solveFixedPoint}">
                         <td th:text="${iter.index}"># de Iteración</td>
-                        <td th:text="${solve.XI}">Valor XI</td>
-                        <td th:text="${solve.GXI}">Valor XI+1</td>
+                        <td th:text="${solve.XI}">Valor Xi</td>
+                        <td th:text="${solve.GXI}">Valor Xi+1</td>
                         <td th:text="${solve.Ea}">Error estimado - aproximación actual</td>
                     </tr>
 
