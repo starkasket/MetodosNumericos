@@ -11,8 +11,8 @@ import lombok.Data;
  * @author StarC
  */
 @Data
-public class NewtonRaphson {
-       private String FX; // Función a evaluar
-    private double XI, FXI, FDXI, XII, Ea; // XII = XI + 1
+public class Secante {
+    private String FX; // Función a evaluar
+    private double XMI, XI, XII, FXMI, FXI, Ea; //XMI = Xi - 1; XII = Xi + 1
     private int IteracionesMaximas;
 }

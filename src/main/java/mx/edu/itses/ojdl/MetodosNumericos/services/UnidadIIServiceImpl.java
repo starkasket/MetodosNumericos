@@ -6,6 +6,8 @@ import mx.edu.itses.ojdl.MetodosNumericos.domain.Biseccion;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.NewtonRaphson;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.PuntoFijo;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.ReglaFalsa;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.Secante;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.SecanteModificado;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -122,7 +124,7 @@ public class UnidadIIServiceImpl implements UnidadIIService {
         ArrayList<PuntoFijo> respuesta = new ArrayList<>();
         double XI, GXI, Ea;
         XI = fixedpoint.getXI();
-   //     GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
+        //     GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
         Ea = 100;
         for (int i = 1; i < fixedpoint.getIteracionesMaximas(); i++) {
             GXI = Funciones.Ecuacion(fixedpoint.getFX(), XI);
@@ -149,14 +151,13 @@ public class UnidadIIServiceImpl implements UnidadIIService {
 
         XI = newtonraphson.getXI();
         FXI = Funciones.Ecuacion(newtonraphson.getFX(), XI);
-                    FDXI = Funciones.Derivada(newtonraphson.getFX(), XI);
+        FDXI = Funciones.Derivada(newtonraphson.getFX(), XI);
 
-     
         Ea = 100;
         for (int i = 1; i < newtonraphson.getIteracionesMaximas(); i++) {
             FXI = Funciones.Ecuacion(newtonraphson.getFX(), XI);
-             FDXI = Funciones.Derivada(newtonraphson.getFX(), XI);
-                XII = XI - (FXI/FDXI);
+            FDXI = Funciones.Derivada(newtonraphson.getFX(), XI);
+            XII = XI - (FXI / FDXI);
             if (i != 1) {
                 Ea = Funciones.ErrorRelativo(XII, XI);
             }
@@ -167,15 +168,85 @@ public class UnidadIIServiceImpl implements UnidadIIService {
             renglon.setXII(XII);
             renglon.setEa(Ea);
             XI = XII;
-            
+
             respuesta.add(renglon);
-            if(Ea <= newtonraphson.getEa()){
+            if (Ea <= newtonraphson.getEa()) {
                 break;
             }
-            
+
         }
         return respuesta;
 
+    }
+
+    @Override
+    public ArrayList<Secante> AlgoritmoSecante(Secante secant) {
+        ArrayList<Secante> respuesta = new ArrayList<>();
+        double XMI, XI, XII, FXMI, FXI, Ea;
+        XMI = secant.getXMI();
+        XI = secant.getXI();
+        FXI = Funciones.Ecuacion(secant.getFX(), XI);
+        FXMI = Funciones.Ecuacion(secant.getFX(), XMI);
+        // XII = XI - ((FXI * (XMI - XI)) / (FXMI - FXI));
+        Ea = 100;
+        for (int i = 1; i < secant.getIteracionesMaximas(); i++) {
+            FXI = Funciones.Ecuacion(secant.getFX(), XI);
+            FXMI = Funciones.Ecuacion(secant.getFX(), XMI);
+            XII = XI - ((FXI * (XMI - XI)) / (FXMI - FXI));
+          
+                Ea = Funciones.ErrorRelativo(XII, XI);
+            
+            Secante renglon = new Secante();
+            renglon.setXI(XI);
+            renglon.setXMI(XMI);
+            renglon.setXII(XII);
+            renglon.setFXI(FXI);
+            renglon.setFXMI(FXMI);
+            renglon.setEa(Ea);
+            XMI = XI;
+            XI = XII;
+            respuesta.add(renglon);
+            if (Ea <= secant.getEa()) {
+                break;
+            }
+        }
+        return respuesta;
+
+    }
+
+    @Override
+    public ArrayList<SecanteModificado> AlgoritmoSecanteModificado(SecanteModificado modsecant) {
+        ArrayList<SecanteModificado> respuesta = new ArrayList<>();
+        double Sigma, XI, XII, FXIS, FXI, Ea;
+        Sigma = modsecant.getSigma();
+        XI = modsecant.getXI();
+        FXI = Funciones.Ecuacion(modsecant.getFX(), XI);
+        FXIS = Funciones.Ecuacion(modsecant.getFX(), (XI + XI * Sigma));
+        XII = XI - ((Sigma * XI * FXI) / (FXIS - FXI));
+         System.out.println(XI + (XI * Sigma));
+        Ea = 100;
+        for (int i = 1; i < modsecant.getIteracionesMaximas(); i++) {
+            FXI = Funciones.Ecuacion(modsecant.getFX(), XI);
+           
+            FXIS = Funciones.Ecuacion(modsecant.getFX(), (XI + XI * Sigma));
+            XII = XI - ((Sigma * XI * FXI) / (FXIS - FXI));
+        
+                Ea = Funciones.ErrorRelativo(XII, XI);
+            
+            SecanteModificado renglon = new SecanteModificado();
+            renglon.setXI(XI);
+            renglon.setXII(XII);
+            renglon.setSigma(Sigma);
+            renglon.setFXI(FXI);
+            renglon.setFXIS(FXIS);
+            renglon.setEa(Ea);
+            XI = XII;
+            respuesta.add(renglon);
+            if (Ea<= modsecant.getEa()) {
+                break;
+            }
+        }
+return respuesta;
     }
 
 }

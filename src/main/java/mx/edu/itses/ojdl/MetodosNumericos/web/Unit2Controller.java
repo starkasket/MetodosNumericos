@@ -5,6 +5,8 @@ import mx.edu.itses.ojdl.MetodosNumericos.domain.Biseccion;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.NewtonRaphson;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.PuntoFijo;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.ReglaFalsa;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.Secante;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.SecanteModificado;
 import mx.edu.itses.ojdl.MetodosNumericos.services.Funciones;
 import mx.edu.itses.ojdl.MetodosNumericos.services.UnidadIIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,11 @@ public class Unit2Controller {
     private UnidadIIService fixedpointservice;
     @Autowired
     private UnidadIIService newtonraphsonservice;
+    @Autowired
+    private UnidadIIService secantservice;
+    @Autowired
+    private UnidadIIService modsecantservice;
+    
 
     @GetMapping("/unit2/formbisection")
     public String formBisection(Model model) {
@@ -99,6 +106,34 @@ public class Unit2Controller {
         var solveNewtonRaphson = newtonraphsonservice.AlgoritmoNewtonRaphon(newtonraphson);
         model.addAttribute("solveNewtonRaphson", solveNewtonRaphson);
         return "/unit2/newtonraphson/solvenewtonraphson";
+    }
+    
+    @GetMapping("/unit2/formsecant")
+    public String formSecant(Model model){
+        Secante secant = new Secante();
+        model.addAttribute("secant", secant);
+        return "unit2/secante/formsecant";
+    }
+    
+    @PostMapping("/unit2/solvesecant")
+    public String solvesecant(Secante secant, Model model){
+        var solveSecant = secantservice.AlgoritmoSecante(secant);
+        model.addAttribute("solveSecant", solveSecant);
+        return "/unit2/secante/solvesecant";
+    }
+    
+    @GetMapping("/unit2/formmodsecant")
+    public String formModSecant(Model model){
+        SecanteModificado modsecant = new SecanteModificado();
+        model.addAttribute("modsecant", modsecant);
+        return "unit2/secantemodificado/formmodsecant";
+    }
+    
+    @PostMapping("/unit2/solvemodsecant")
+    public String solvemodsecant(SecanteModificado modsecant, Model model){
+        var solveModSecant = modsecantservice.AlgoritmoSecanteModificado(modsecant);
+        model.addAttribute("solveModSecant", solveModSecant);
+        return "/unit2/secantemodificado/solvemodsecant";
     }
 
 }
