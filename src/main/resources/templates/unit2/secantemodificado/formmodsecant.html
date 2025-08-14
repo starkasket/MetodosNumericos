@@ -21,17 +21,21 @@
         ></script>
     </head>
     <body>
-        <nav class="navbar navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">
-                    <img th:src="@{/images/logo.itses.png}" width="125" height="38" class="d-inline-block align-top">
-                    MÉTODOS NUMÉRICOS
-                </a>
+       
 
-            </div>
-    </nav>
+ <nav th:replace="/layout/template :: menu"></nav>
+        <div th:replace="/layout/template :: bannerunit2"></div>
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="/unit2">Solución Ecuaciones</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Formulario - Secante modificado</li>
 
 
+                </ol>
+            </nav>
+        </div>
     <div class="container">
         <h1 class="text">Método de Secante Modificado</h1>
         <h3 class="text"> Ingresa los parámetros siguientes: </h3>    

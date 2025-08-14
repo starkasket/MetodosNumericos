@@ -21,66 +21,70 @@
         ></script>
     </head>
     <body>
-        <nav class="navbar navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">
-                    <img th:src="@{/images/logo.itses.png}" width="125" height="38" class="d-inline-block align-top">
-                    MÉTODOS NUMÉRICOS
-                </a>
+        <nav th:replace="/layout/template :: menu"></nav>
+        <div th:replace="/layout/template :: bannerunit2"></div>
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="/unit2">Solución Ecuaciones</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Formulario - Bisección</li>
 
-            </div>
-    </nav>
+
+                </ol>
+            </nav>
+        </div>
 
 
-    <div class="container">
-        <h1 class="text">Método de Bisección</h1>
-        <h3 class="text"> Ingresa los parámetros siguientes: </h3>    
-        <form class="row g-3" th:action="@{/unit2/solvebisection}" method="post" th:object="${bisection}">
+        <div class="container">
+            <h1 class="text">Método de Bisección</h1>
+            <h3 class="text"> Ingresa los parámetros siguientes: </h3>    
+            <form class="row g-3" th:action="@{/unit2/solvebisection}" method="post" th:object="${bisection}">
 
-            <div class="col-md-6">
-                <label for="FX" class="form-label">Ingresa la función: </label>
-                <input type="text" class="form-control" id="FX" name="FX" th:field="*{FX}">
+                <div class="col-md-6">
+                    <label for="FX" class="form-label">Ingresa la función: </label>
+                    <input type="text" class="form-control" id="FX" name="FX" th:field="*{FX}">
 
-            </div>
-
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="XL" class="form-label">Xl: </label>
-                    <input type="text" class="form-control" id="XL"  name="XL"  th:field="*{XL}">
                 </div>
 
-                <div class="col-md-3">
-                    <label for="XU" class="form-label">Xu: </label>
-                    <input type="text" class="form-control" id="XU"  name="XU"  th:field="*{XU}">
-                </div> 
-            </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="XL" class="form-label">Xl: </label>
+                        <input type="text" class="form-control" id="XL"  name="XL"  th:field="*{XL}">
+                    </div>
 
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="Ea" class="form-label">Error estimado: </label>
-                    <input type="text" class="form-control" id="Ea"  name="Ea"  th:field="*{Ea}">
-                </div>  
-            </div>
-
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="IteracionesMaximas" class="form-label">Número máximo de iteraciones: </label>
-                    <input type="text" class="form-control" id="IteracionesMaximas" name="IteracionesMaximas"  th:field="*{IteracionesMaximas}">
-                </div>
-            </div>
-
-            <div class="p-2 row">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Ejecutar</button>
+                    <div class="col-md-3">
+                        <label for="XU" class="form-label">Xu: </label>
+                        <input type="text" class="form-control" id="XU"  name="XU"  th:field="*{XU}">
+                    </div> 
                 </div>
 
-            </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="Ea" class="form-label">Error estimado: </label>
+                        <input type="text" class="form-control" id="Ea"  name="Ea"  th:field="*{Ea}">
+                    </div>  
+                </div>
 
-        </form>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="IteracionesMaximas" class="form-label">Número máximo de iteraciones: </label>
+                        <input type="text" class="form-control" id="IteracionesMaximas" name="IteracionesMaximas"  th:field="*{IteracionesMaximas}">
+                    </div>
+                </div>
 
-    </div>
-        
-         
-</body>
+                <div class="p-2 row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Ejecutar</button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+    </body>
 </html>
 

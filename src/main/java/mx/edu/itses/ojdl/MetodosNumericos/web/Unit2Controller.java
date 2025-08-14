@@ -18,21 +18,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @Slf4j
 public class Unit2Controller {
-
-    @Autowired
-    private UnidadIIService bisectionservice;
-    @Autowired
-    private UnidadIIService regulafalsiservice;
-    @Autowired
-    private UnidadIIService fixedpointservice;
-    @Autowired
-    private UnidadIIService newtonraphsonservice;
-    @Autowired
-    private UnidadIIService secantservice;
-    @Autowired
-    private UnidadIIService modsecantservice;
+   @Autowired
+    private UnidadIIService unidadIIservice;
     
-
+    
+    
+    @GetMapping("/unit2")
+    public String index(Model model){
+        return "unit2/index";
+    }
+    
+    
     @GetMapping("/unit2/formbisection")
     public String formBisection(Model model) {
 
@@ -49,7 +45,7 @@ public class Unit2Controller {
         /* double valorFX = Funciones.Ecuacion(bisection.getFX(), bisection.getXL());
          log.info("Valor de FX: " + valorFX);
          */
-        var solveBisection = bisectionservice.AlgoritmoBiseccion(bisection);
+        var solveBisection = unidadIIservice.AlgoritmoBiseccion(bisection);
 
         model.addAttribute("solveBisection", solveBisection);
         return "/unit2/bisection/solvebisection";
@@ -69,7 +65,7 @@ public class Unit2Controller {
     @PostMapping("/unit2/solveregulafalsi")
     public String solvregulafalsi(ReglaFalsa regulafalsi, Model model) {
 
-        var solveRegulaFalsi = regulafalsiservice.AlgoritmoReglaFalsa(regulafalsi);
+        var solveRegulaFalsi = unidadIIservice.AlgoritmoReglaFalsa(regulafalsi);
 
         model.addAttribute("solveRegulaFalsi", solveRegulaFalsi);
         return "/unit2/reglafalsa/solveregulafalsi";
@@ -86,7 +82,7 @@ public class Unit2Controller {
 
     @PostMapping("/unit2/solvefixedpoint")
     public String solvefixedpoint(PuntoFijo fixedpoint, Model model) {
-        var solveFixedPoint = fixedpointservice.AlgoritmoPuntoFijo(fixedpoint);
+        var solveFixedPoint = unidadIIservice.AlgoritmoPuntoFijo(fixedpoint);
 
         model.addAttribute("solveFixedPoint", solveFixedPoint);
         return "/unit2/puntofijo/solvefixedpoint";
@@ -103,7 +99,7 @@ public class Unit2Controller {
 
     @PostMapping("/unit2/solvenewtonraphson")
     public String solvenewtonraphson(NewtonRaphson newtonraphson, Model model) {
-        var solveNewtonRaphson = newtonraphsonservice.AlgoritmoNewtonRaphon(newtonraphson);
+        var solveNewtonRaphson = unidadIIservice.AlgoritmoNewtonRaphon(newtonraphson);
         model.addAttribute("solveNewtonRaphson", solveNewtonRaphson);
         return "/unit2/newtonraphson/solvenewtonraphson";
     }
@@ -117,7 +113,7 @@ public class Unit2Controller {
     
     @PostMapping("/unit2/solvesecant")
     public String solvesecant(Secante secant, Model model){
-        var solveSecant = secantservice.AlgoritmoSecante(secant);
+        var solveSecant = unidadIIservice.AlgoritmoSecante(secant);
         model.addAttribute("solveSecant", solveSecant);
         return "/unit2/secante/solvesecant";
     }
@@ -131,7 +127,7 @@ public class Unit2Controller {
     
     @PostMapping("/unit2/solvemodsecant")
     public String solvemodsecant(SecanteModificado modsecant, Model model){
-        var solveModSecant = modsecantservice.AlgoritmoSecanteModificado(modsecant);
+        var solveModSecant = unidadIIservice.AlgoritmoSecanteModificado(modsecant);
         model.addAttribute("solveModSecant", solveModSecant);
         return "/unit2/secantemodificado/solvemodsecant";
     }

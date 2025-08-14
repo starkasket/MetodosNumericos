@@ -23,13 +23,31 @@
     <body>
         <div class="container">
             <nav th:replace="/layout/template :: menu"></nav>
+            <div th:replace="/layout/template :: bannerunit2"></div>
             <div class="container">
-                <div class="row">
-                    <img class="img-fluid w-100" th:src="@{/images/metodosnumericos.png}"/>
-                </div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Sistemas Lineales</li>
+                    </ol>
+                </nav>
             </div>
+
             <div class="container">
 
+                <h1 class="text">Solución de Ecuacciones Algebráicas</h1>
+                <h3 class="text">Métodos Numéricos</h3>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/unit3/formreglacramer">Regla de Cramer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/unit3/formgauss">Eliminación Gaussiana</a>
+                    </li>
+              
+
+                </ul>
             </div>
         </div>
 
