@@ -74,7 +74,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Inicio</a></li>
                     <li class="breadcrumb-item"><a href="/unit3">Sistemas Lineales</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Formulario: Eliminación Gaussiana</li>
+                    <li class="breadcrumb-item active" aria-current="page">Formulario: Gauss-Jordan</li>
 
 
                 </ol>
@@ -82,9 +82,9 @@
         </div>
 
         <div class="container">
-        <form class="row g-3" th:action="@{/unit3/solvegauss}" method="post" th:object="${modelGauss}">
+        <form class="row g-3" th:action="@{/unit3/solvegaussjordan}" method="post" th:object="${modelGaussJordan}">
             <div class="container">
-                <h1 class="text">Método directo: Eliminación Gaussiana</h1>
+                <h1 class="text">Método directo: Método de Gauss Jordan.</h1>
                 <h3 class="text"> Ingresa los parámetros siguientes: </h3>    
                 <div class="row">
                     <div class="col-md-3">

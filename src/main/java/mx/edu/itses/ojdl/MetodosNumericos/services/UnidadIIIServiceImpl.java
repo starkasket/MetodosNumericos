@@ -3,6 +3,7 @@ package mx.edu.itses.ojdl.MetodosNumericos.services;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.Gauss;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.GaussJordan;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.ReglaCramer;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,7 @@ public class UnidadIIIServiceImpl implements UnidadIIIService {
                         index++;
                     }
                 }
-                
+
                 // MatrizX1
                 index = 0;
                 for (int i = 0; i < modelCramer.getMN(); i++) { //renglón
@@ -81,7 +82,7 @@ public class UnidadIIIServiceImpl implements UnidadIIIService {
                         }
                     }
                 }
-            
+
                 //MatrizX2
                 index = 0;
                 for (int i = 0; i < modelCramer.getMN(); i++) { //renglón
@@ -95,7 +96,7 @@ public class UnidadIIIServiceImpl implements UnidadIIIService {
                         }
                     }
                 }
-                
+
                 //MatrizX3
                 index = 0;
                 for (int i = 0; i < modelCramer.getMN(); i++) { //renglón
@@ -110,11 +111,8 @@ public class UnidadIIIServiceImpl implements UnidadIIIService {
                     }
                 }
 
-         
-
                 determinantes.add(Det3(MatrizA));
-             
-             
+
                 determinantes.add(Det3(MatrizX1));
                 determinantes.add(Det3(MatrizX2));
                 determinantes.add(Det3(MatrizX3));
@@ -155,15 +153,15 @@ public class UnidadIIIServiceImpl implements UnidadIIIService {
 
     @Override
     public Gauss AlgoritmoGauss(Gauss modelGauss) {
-         
+
         ArrayList<Double> vectorX = new ArrayList<>();
         int n = modelGauss.getMN();
-        
+
         double[][] A = new double[n][n];
         double[] b = new double[n];
-        
+
         int index = 0;
-        
+
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 A[i][j] = modelGauss.getMatrizA().get(index);
@@ -173,49 +171,113 @@ public class UnidadIIIServiceImpl implements UnidadIIIService {
         for (int i = 0; i < n; i++) {
             b[i] = modelGauss.getVectorB().get(i);
         }
-        
+
         for (int k = 0; k < n - 1; k++) {
-        int maxRow = k;
-        for (int i = k + 1; i < n; i++) {
-            if (Math.abs(A[i][k]) > Math.abs(A[maxRow][k])) {
-                maxRow = i;
+            int maxRow = k;
+            for (int i = k + 1; i < n; i++) {
+                if (Math.abs(A[i][k]) > Math.abs(A[maxRow][k])) {
+                    maxRow = i;
+                }
+            }
+
+            if (maxRow != k) {
+                double[] tempRow = A[k];
+                A[k] = A[maxRow];
+                A[maxRow] = tempRow;
+
+                double tempB = b[k];
+                b[k] = b[maxRow];
+                b[maxRow] = tempB;
+            }
+
+            for (int i = k + 1; i < n; i++) {
+                double factor = A[i][k] / A[k][k];
+                for (int j = k; j < n; j++) {
+                    A[i][j] -= factor * A[k][j];
+                }
+                b[i] -= factor * b[k];
             }
         }
- 
-        if (maxRow != k) {
-            double[] tempRow = A[k];
-            A[k] = A[maxRow];
-            A[maxRow] = tempRow;
 
-            double tempB = b[k];
-            b[k] = b[maxRow];
-            b[maxRow] = tempB;
-        }
-
-        for (int i = k + 1; i < n; i++) {
-            double factor = A[i][k] / A[k][k];
-            for (int j = k; j < n; j++) {
-                A[i][j] -= factor * A[k][j];
+        double[] x = new double[n];
+        for (int i = n - 1; i >= 0; i--) {
+            double suma = b[i];
+            for (int j = i + 1; j < n; j++) {
+                suma -= A[i][j] * x[j];
             }
-            b[i] -= factor * b[k];
+            x[i] = suma / A[i][i];
         }
-    }
 
-    double[] x = new double[n];
-    for (int i = n - 1; i >= 0; i--) {
-        double suma = b[i];
-        for (int j = i + 1; j < n; j++) {
-            suma -= A[i][j] * x[j];
+        for (double val : x) {
+            vectorX.add(val);
         }
-        x[i] = suma / A[i][i];
+
+        modelGauss.setVectorX(vectorX);
+        return modelGauss;
+
     }
 
-    for (double val : x) {
-        vectorX.add(val);
-    }
+    @Override
+    public GaussJordan AlgoritmoGaussJordan(GaussJordan modelGaussJordan) {
+        ArrayList<Double> vectorX = new ArrayList<>();
+        int n = modelGaussJordan.getMN();
 
-    modelGauss.setVectorX(vectorX);
-    return modelGauss;
+        double[][] A = new double[n][n];
+        double[] b = new double[n];
+
+        int index = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                A[i][j] = modelGaussJordan.getMatrizA().get(index);
+                index++;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            b[i] = modelGaussJordan.getVectorB().get(i);
+        }
+
+        for (int i = 0; i < n; i++) {
+            int maxRow = i;
+            for (int j = i + 1; j < n; j++) {
+                if (Math.abs(A[j][i]) > Math.abs(A[maxRow][i])) {
+                    maxRow = j;
+                }
+            }
+            if (maxRow != i) {
+                double[] tempRow = A[i];
+                A[i] = A[maxRow];
+                A[maxRow] = tempRow;
+                
+                double tempB = b[i];
+                b[i] = b[maxRow];
+                b[maxRow] = tempB;
+            }
+            
+            double pivot = A[i][i];
+            for (int k = 0; k < n; k++) {
+                A[i][k] /= pivot;
+            }
+            b[i] /= pivot;
+            
+            for (int j = 0; j < n; j++) {
+                if (j != i) {
+                    double factor = A[j][i];
+                    for (int k = 0; k < n; k++) {
+                     A[j][k] -= factor * A[i][k];   
+                    }
+                    b[j] -= factor * b[i];
+                }
+            }
+            
+        }
+
+        for (int i = 0; i < n; i++) {
+            vectorX.add(b[i]);
+        }
+        
+        modelGaussJordan.setVectorX(vectorX);
+        return modelGaussJordan;
         
     }
 

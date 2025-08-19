@@ -66,19 +66,19 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Inicio</a></li>
                     <li class="breadcrumb-item"><a href="/unit3">Sistemas Lineales</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Formulario: Eliminación Gaussiana</li>
+                    <li class="breadcrumb-item active" aria-current="page">Formulario: Gauss-Jordan</li>
                 </ol>
             </nav>
 
             <div class="container">
-                <h1 class="text">Método Directo: Eliminación Gaussiana</h1>
+                <h1 class="text">Método Directo: Gauss-Jordan</h1>
 
                 <div class="row justify-content-start">
                     <div class="col-4">
                         <p class="text">Tamaño del Sistema</p>
                     </div>
                     <div class="col-4">
-                        <p th:text="${solveGauss.MN}">MN</p>
+                        <p th:text="${solveGaussJordan.MN}">MN</p>
                     </div>
                 </div>
                 <div class="row">
@@ -86,25 +86,25 @@
                             <div class="row align-items-start">
                                 <div class="col">
                                     <p>MATRIZ A</p>
-                                    <div th:each="i : ${#numbers.sequence(0, solveGauss.MN-1)}" class="row">
-                                <div class="col" th:each="j : ${#numbers.sequence(0, solveGauss.MN-1)}">
-                                    <p th:text="${solveGauss.MatrizA[i*solveGauss.MN + j]}"></p>
+                                    <div th:each="i : ${#numbers.sequence(0, solveGaussJordan.MN-1)}" class="row">
+                                <div class="col" th:each="j : ${#numbers.sequence(0, solveGaussJordan.MN-1)}">
+                                    <p th:text="${solveGaussJordan.MatrizA[i*solveGaussJordan.MN + j]}"></p>
                                 </div>
                             </div>
                                 </div>
                                 <div class="col-2">
                                     <p>Vector B</p>
-                                    <div class="row align-items-start" th:each="i : ${#numbers.sequence(0, solveGauss.MN-1)}">
+                                    <div class="row align-items-start" th:each="i : ${#numbers.sequence(0, solveGaussJordan.MN-1)}">
                                         <div class="col">
-                                            <p th:text="${solveGauss.VectorB[i]}"></p>
+                                            <p th:text="${solveGaussJordan.VectorB[i]}"></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <p>Solución(X)</p>
-                                    <div class="row align-items-start" th:each="i : ${#numbers.sequence(0, solveGauss.MN-1)}">
+                                    <div class="row align-items-start" th:each="i : ${#numbers.sequence(0, solveGaussJordan.MN-1)}">
                                         <div class="col" >
-                                            <p th:text="${solveGauss.vectorX[i]}"></p>
+                                            <p th:text="${solveGaussJordan.vectorX[i]}"></p>
                                         </div>
                                     </div>
                                    

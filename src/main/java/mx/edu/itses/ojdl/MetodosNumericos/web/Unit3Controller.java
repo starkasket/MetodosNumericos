@@ -4,6 +4,7 @@ package mx.edu.itses.ojdl.MetodosNumericos.web;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.Gauss;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.GaussJordan;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.ReglaCramer;
 import mx.edu.itses.ojdl.MetodosNumericos.services.UnidadIIIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,16 +47,28 @@ public class Unit3Controller {
     @GetMapping("/unit3/formgauss")
     public String formGauss(Model model){
         Gauss modelGauss = new Gauss();
-        model.addAttribute("modelCramer", modelGauss);
+        model.addAttribute("modelGauss", modelGauss);
         return "unit3/gauss/formgauss";
     }
     
     @PostMapping("/unit3/solvegauss")
     public String solveGauss(Gauss modelGauss, Errors error, Model model){
-        // log.info("OBJETOS: " + modelCramer);
       var solveGauss = unidadIIIService.AlgoritmoGauss(modelGauss);
-      // log.info("Solución: " + solveCramer.getVectorX());
-        model.addAttribute("solveCramer", solveGauss);      
-       return "unit3/reglacramer/solvecramer";
+        model.addAttribute("solveGauss", solveGauss);      
+       return "unit3/gauss/solvegauss";
+    }
+    
+    @GetMapping("/unit3/formgaussjordan")
+    public String formGaussJordan(Model model){
+        Gauss modelGaussJordan = new Gauss();
+        model.addAttribute("modelGaussJordan", modelGaussJordan);
+        return "unit3/gaussjordan/formgaussjordan";
+    }
+    
+    @PostMapping("/unit3/solvegaussjordan")
+    public String solveGaussJordan(GaussJordan modelGaussJordan, Errors error, Model model){
+      var solveGaussJordan = unidadIIIService.AlgoritmoGaussJordan(modelGaussJordan);
+        model.addAttribute("solveGaussJordan", solveGaussJordan);      
+       return "unit3/gaussjordan/solvegaussjordan";
     }
 }
