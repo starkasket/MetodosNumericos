@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.Gauss;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.GaussJordan;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.GaussSeidel;
+import mx.edu.itses.ojdl.MetodosNumericos.domain.Jacobi;
 import mx.edu.itses.ojdl.MetodosNumericos.domain.ReglaCramer;
 import org.springframework.stereotype.Service;
 
@@ -248,37 +250,200 @@ public class UnidadIIIServiceImpl implements UnidadIIIService {
                 double[] tempRow = A[i];
                 A[i] = A[maxRow];
                 A[maxRow] = tempRow;
-                
+
                 double tempB = b[i];
                 b[i] = b[maxRow];
                 b[maxRow] = tempB;
             }
-            
+
             double pivot = A[i][i];
             for (int k = 0; k < n; k++) {
                 A[i][k] /= pivot;
             }
             b[i] /= pivot;
-            
+
             for (int j = 0; j < n; j++) {
                 if (j != i) {
                     double factor = A[j][i];
                     for (int k = 0; k < n; k++) {
-                     A[j][k] -= factor * A[i][k];   
+                        A[j][k] -= factor * A[i][k];
                     }
                     b[j] -= factor * b[i];
                 }
             }
-            
+
         }
 
         for (int i = 0; i < n; i++) {
             vectorX.add(b[i]);
         }
-        
+
         modelGaussJordan.setVectorX(vectorX);
         return modelGaussJordan;
-        
+
+    }
+
+    @Override
+    public ArrayList<Jacobi> AlgoritmoJacobi(Jacobi modelJacobi) {
+        int n = modelJacobi.getMN();
+        ArrayList<Jacobi> respuesta = new ArrayList<>();
+
+        double[][] A = new double[n][n];
+        double[] b = new double[n];
+        double[] c = new double[n];
+        double[] ck = new double[n];
+        double[] Ea = new double[n];
+
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                A[i][j] = modelJacobi.getMatrizA().get(index);
+                index++;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            b[i] = modelJacobi.getVectorB().get(i);
+            c[i] = modelJacobi.getC().get(i);
+        }
+
+        for (int it = 1; it <= modelJacobi.getIteracionesMaximas(); it++) {
+            for (int j = 0; j < n; j++) {
+                double suma = 0;
+                for (int k = 0; k < n; k++) {
+                    if (k != j) {
+                        suma += A[j][k] * c[k];
+                    }
+                }
+                ck[j] = (b[j] - suma) / A[j][j];
+            }
+
+            for (int j = 0; j < n; j++) {
+                Ea[j] = Funciones.ErrorRelativo(ck[j], c[j]);
+            }
+
+            Jacobi renglon = new Jacobi();
+            renglon.setIteracion(it);
+            ArrayList<Double> cAnterior = new ArrayList<>();
+
+            for (double val : c) {
+                cAnterior.add(val);
+            }
+            renglon.setCAnterior(cAnterior);
+            ArrayList<Double> cNuevo = new ArrayList<>();
+
+            for (double val : ck) {
+                cNuevo.add(val);
+            }
+            renglon.setCNuevo(cNuevo);
+            ArrayList<Double> errores = new ArrayList<>();
+
+            for (double val : Ea) {
+                errores.add(val);
+            }
+            renglon.setErrores(errores);
+            respuesta.add(renglon);
+
+            boolean stop = true;
+            for (double err : Ea) {
+                if (err > modelJacobi.getEa()) {
+                    stop = false;
+                    break;
+                }
+            }
+            if (stop) {
+                break;
+            }
+
+            for (int j = 0; j < n; j++) {
+                c[j] = ck[j];
+            }
+        }
+
+        return respuesta;
+
+    }
+
+    @Override
+    public ArrayList<GaussSeidel> AlgoritmoGaussSeidel(GaussSeidel modelGaussSeidel) {
+
+        int n = modelGaussSeidel.getMN();
+        ArrayList<GaussSeidel> respuesta = new ArrayList<>();
+
+        double[][] A = new double[n][n];
+        double[] b = new double[n];
+        double[] c = new double[n];  
+        double[] cNuevo = new double[n];
+        double[] Ea = new double[n];
+
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                A[i][j] = modelGaussSeidel.getMatrizA().get(index);
+                index++;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            b[i] = modelGaussSeidel.getVectorB().get(i);
+            c[i] = modelGaussSeidel.getC().get(i);
+        }
+
+        for (int it = 1; it <= modelGaussSeidel.getIteracionesMaximas(); it++) {
+            for (int j = 0; j < n; j++) {
+                double suma = 0;
+                for (int k = 0; k < n; k++) {
+                    if (k != j) {
+                        suma += A[j][k] * (k < j ? cNuevo[k] : c[k]);
+                    }
+                }
+                cNuevo[j] = (b[j] - suma) / A[j][j];
+            }
+
+            for (int j = 0; j < n; j++) {
+                Ea[j] = Funciones.ErrorRelativo(cNuevo[j], c[j]);
+            }
+
+            GaussSeidel renglon = new GaussSeidel();
+            renglon.setIteracion(it);
+
+            ArrayList<Double> cAnterior = new ArrayList<>();
+            for (double val : c) {
+                cAnterior.add(val);
+            }
+            renglon.setCAnterior(cAnterior);
+
+            ArrayList<Double> cNuevos = new ArrayList<>();
+            for (double val : cNuevo) {
+                cNuevos.add(val);
+            }
+            renglon.setCNuevo(cNuevos);
+
+            ArrayList<Double> errores = new ArrayList<>();
+            for (double val : Ea) {
+                errores.add(val);
+            }
+            renglon.setErrores(errores);
+
+            respuesta.add(renglon);
+
+            boolean stop = true;
+            for (double err : Ea) {
+                if (err > modelGaussSeidel.getEa()) {
+                    stop = false;
+                    break;
+                }
+            }
+            if (stop) {
+                break;
+            }
+            for (int j = 0; j < n; j++) {
+                c[j] = cNuevo[j];
+            }
+        }
+
+        return respuesta;
+
     }
 
 }
