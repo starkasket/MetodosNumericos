@@ -102,3 +102,27 @@ public class Unit3Controller {
         return "unit3/gaussseidel/solvegaussseidel";
     }
 }
+
+/*
+
+  @GetMapping("/unit4")
+    public String index(Model model) {
+        return "unit4/index";
+    }
+    
+      @GetMapping("/unit4/formddnewton")
+    public String formDDNewton(Model model) {
+        DDNewton modelDDNewton = new DDNewton();
+        model.addAttribute("modelDDNewton", modelDDNewton);
+        return "unit4/ddnewton/formddnewton";
+    }
+
+    @PostMapping("/unit4/solveddnewton")
+    public String solveDDNewton(DDNewton modelDDNewton, Errors error, Model model) {
+        var solveDDNewton = unidadIVService.algoritmoDDNewton(modelDDNewton);
+        model.addAttribute("solveDDNewton", solveDDNewton);
+        return "unit4/ddnewton/solveddnewton";
+    }
+
+
+*/
